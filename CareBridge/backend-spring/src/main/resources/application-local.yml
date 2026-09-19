@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:medivault_dev;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: false
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+management:
+  health:
+    mail:
+      enabled: false
+
+logging:
+  level:
+    root: INFO
+    com.medivault: DEBUG

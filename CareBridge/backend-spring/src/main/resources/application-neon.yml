@@ -1,0 +1,24 @@
+spring:
+  config:
+    activate:
+      on-profile: neon
+
+  datasource:
+    url: ${NEON_DATABASE_URL:jdbc:postgresql://ep-divine-fog-aza3j0to.c-3.ap-southeast-1.aws.neon.tech:5432/neondb?sslmode=require}
+    username: ${NEON_DATABASE_USER:neondb_owner}
+    password: ${NEON_DATABASE_PASSWORD:npg_T8wtK9uEbVlO}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 300000
+      max-lifetime: 600000
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+  flyway:
+    enabled: false

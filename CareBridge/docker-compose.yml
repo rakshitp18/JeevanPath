@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend-spring
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=neon
+      - NEON_DATABASE_URL=jdbc:postgresql://ep-divine-fog-aza3j0to.c-3.ap-southeast-1.aws.neon.tech:5432/neondb?sslmode=require
+      - NEON_DATABASE_USER=neondb_owner
+      - NEON_DATABASE_PASSWORD=npg_T8wtK9uEbVlO
+      - JWT_SECRET=defaultSecretKeyThatIsAtLeast32BytesLongForSecurityHS256Algorithm
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8080
+    restart: unless-stopped

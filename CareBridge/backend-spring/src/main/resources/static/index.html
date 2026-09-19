@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediVault Spring Boot API Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Medical Blue Palette Tokens */
+      --blue-lightest: #B3E5FC;
+      --blue-soft: #81D4FA;
+      --blue-vibrant: #4FC3F7;
+      --blue-primary: #29B6F6;
+      --blue-deep: #0288D1;
+      --blue-dark: #01579B;
+      
+      --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #B3E5FC 100%);
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-border: rgba(79, 195, 247, 0.35);
+      --text-dark: #0c4a6e;
+      --text-muted: #0369a1;
+      --shadow-glow: 0 10px 30px -5px rgba(2, 136, 209, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+
+    /* Color Palette Banner Display */
+    .palette-strip {
+      display: flex;
+      height: 8px;
+      width: 100%;
+    }
+    .palette-color-1 { background-color: var(--blue-lightest); flex: 1; }
+    .palette-color-2 { background-color: var(--blue-soft); flex: 1; }
+    .palette-color-3 { background-color: var(--blue-vibrant); flex: 1; }
+    .palette-color-4 { background-color: var(--blue-primary); flex: 1; }
+    .palette-color-5 { background-color: var(--blue-deep); flex: 1; }
+
+    header {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 1.25rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue-primary) 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 4px 12px rgba(2, 136, 209, 0.3);
+    }
+
+    .brand-text h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--blue-deep);
+      letter-spacing: -0.02em;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      background: #e0f2fe;
+      border: 1px solid var(--blue-vibrant);
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--blue-deep);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    /* Hero section with Medical Background Image (hospital.png) */
+    .hero {
+      text-align: center;
+      margin-bottom: 3.5rem;
+      background: linear-gradient(135deg, rgba(1, 87, 155, 0.82) 0%, rgba(2, 136, 209, 0.85) 100%), url('/hospital.png') center/cover no-repeat;
+      padding: 4rem 2rem;
+      border-radius: 28px;
+      color: white;
+      box-shadow: 0 20px 40px rgba(2, 136, 209, 0.3);
+      border: 2px solid rgba(79, 195, 247, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      padding: 0.35rem 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      color: #ffffff;
+      font-size: 0.825rem;
+      font-weight: 700;
+      border-radius: 9999px;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .hero-title {
+      font-size: 2.85rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .hero-title span {
+      color: #4FC3F7;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: #e0f2fe;
+      max-width: 650px;
+      margin: 0 auto 2rem auto;
+    }
+
+    .cta-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: #ffffff;
+      color: var(--blue-deep);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      border: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      background: #f0f9ff;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      color: #ffffff;
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      backdrop-filter: blur(8px);
+      box-shadow: var(--shadow-glow);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--blue-vibrant);
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue-lightest) 0%, var(--blue-soft) 100%);
+      color: var(--blue-deep);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .endpoint-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      padding: 0.3rem 0.6rem;
+      background: #e0f2fe;
+      color: var(--blue-deep);
+      border-radius: 6px;
+      border: 1px solid var(--blue-soft);
+    }
+
+    .palette-showcase {
+      background: white;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: var(--shadow-glow);
+      margin-bottom: 3rem;
+    }
+
+    .palette-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin-bottom: 1.25rem;
+      text-align: center;
+    }
+
+    .swatches {
+      display: flex;
+      border-radius: 12px;
+      overflow: hidden;
+      height: 80px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .swatch {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      transition: flex 0.3s ease;
+    }
+
+    .swatch:hover {
+      flex: 1.4;
+    }
+
+    .swatch-1 { background-color: #B3E5FC; color: #01579B; }
+    .swatch-2 { background-color: #81D4FA; color: #01579B; }
+    .swatch-3 { background-color: #4FC3F7; color: #01579B; }
+    .swatch-4 { background-color: #29B6F6; color: white; }
+    .swatch-5 { background-color: #0288D1; color: white; }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.85);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="palette-strip">
+    <div class="palette-color-1"></div>
+    <div class="palette-color-2"></div>
+    <div class="palette-color-3"></div>
+    <div class="palette-color-4"></div>
+    <div class="palette-color-5"></div>
+  </div>
+
+  <header>
+    <div class="header-container">
+      <a href="#" class="brand">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/><path d="m4.93 4.93 14.14 14.14"/><path d="m4.93 19.07 14.14-14.14"/></svg>
+        </div>
+        <div class="brand-text">
+          <h1>MediVault Spring Boot API</h1>
+          <p>Enterprise Healthcare Backend Platform</p>
+        </div>
+      </a>
+      <div class="status-badge">
+        <span class="status-dot"></span>
+        Backend Active (Port 8080)
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <span class="hero-tag">Spring Boot 3.2.5 • Java 21</span>
+      <h2 class="hero-title">MediVault <span>Healthcare API Portal</span></h2>
+      <p class="hero-subtitle">High-performance REST API services for Patient Records, Doctor Workstations, Smart Appointment Scheduling, and AI Clinical Insights.</p>
+      <div class="cta-group">
+        <a href="/swagger-ui/index.html" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Open Swagger UI Docs
+        </a>
+        <a href="/actuator/health" class="btn btn-secondary" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Check Actuator Health
+        </a>
+        <a href="/v3/api-docs" class="btn btn-secondary" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          OpenAPI JSON Spec
+        </a>
+      </div>
+    </section>
+
+    <!-- Color Theme Palette Display -->
+    <section class="palette-showcase">
+      <h3 class="palette-title">Design System • Medical Blue Color Palette & Graphic Assets</h3>
+      <div class="swatches">
+        <div class="swatch swatch-1">#B3E5FC</div>
+        <div class="swatch swatch-2">#81D4FA</div>
+        <div class="swatch swatch-3">#4FC3F7</div>
+        <div class="swatch swatch-4">#29B6F6</div>
+        <div class="swatch swatch-5">#0288D1</div>
+      </div>
+    </section>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h3 class="card-title">Auth & Identity Domain</h3>
+        <p class="card-desc">JWT Authentication with BCrypt password security, role permissions, patient/doctor onboarding, and OTP verification.</p>
+        <span class="endpoint-badge">/api/v1/auth/*</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        </div>
+        <h3 class="card-title">Patient Domain</h3>
+        <p class="card-desc">Normalized profiles containing medical info, emergency contacts, insurance information, and family health records.</p>
+        <span class="endpoint-badge">/api/v1/patient/*</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <h3 class="card-title">Appointment Engine</h3>
+        <p class="card-desc">Dynamic slot generation, strict state machine lifecycle, doctor availability management, and QR check-ins.</p>
+        <span class="endpoint-badge">/api/v1/appointments/*</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <h3 class="card-title">Medical Records & Prescriptions</h3>
+        <p class="card-desc">Digital Health Records, Cloudinary encrypted report storage, prescription management, and unified health timelines.</p>
+        <span class="endpoint-badge">/api/v1/medical/*</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <h3 class="card-title">Emergency QR Module</h3>
+        <p class="card-desc">Public-facing emergency profile access, critical condition scanning, and instant paramedic access control.</p>
+        <span class="endpoint-badge">/api/public/emergency/*</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+        </div>
+        <h3 class="card-title">Analytics & Platform Services</h3>
+        <p class="card-desc">Real-time health risk scoring, hospital statistics, notifications engine, and government scheme modules.</p>
+        <span class="endpoint-badge">/api/v1/analytics/*</span>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    MediVault Capstone Healthcare Platform • Spring Boot Edition • Theme: Medical Blue Graphic Background (hospital.png)
+  </footer>
+</body>
+</html>
